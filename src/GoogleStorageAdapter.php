@@ -140,12 +140,11 @@ class GoogleStorageAdapter extends AbstractAdapter
     {
         $options = [];
 
+        // We have to define Acl only in case when we want to interact with visibility settings,
+        // in other cases we suppose that enable uniform bucket-level access is enabled hence all requests
+        // will cause the errors with predefinedAcl parameter so we have to skip it.
         if ($visibility = $config->get('visibility')) {
             $options['predefinedAcl'] = $this->getPredefinedAclForVisibility($visibility);
-        } else {
-            // if a file is created without an acl, it isn't accessible via the console
-            // we therefore default to private
-            $options['predefinedAcl'] = $this->getPredefinedAclForVisibility(AdapterInterface::VISIBILITY_PRIVATE);
         }
 
         if ($metadata = $config->get('metadata')) {
